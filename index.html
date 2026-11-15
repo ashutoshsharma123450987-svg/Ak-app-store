@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AK Apps Store – Free Android APK Downloads</title>
+  <meta name="description" content="AK Apps Store: safe aur free Android apps (APK) download karein." />
+  <meta name="theme-color" content="#0a0a0a" />
+  <link rel="icon" href="logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- GOOGLE ADSENSE: apna publisher ID daal kar niche wali line uncomment karein -->
+  <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
+</head>
+<body>
+  <canvas id="bg"></canvas>
+  <div class="glow g1"></div><div class="glow g2"></div>
+
+  <header class="nav" id="nav">
+    <a href="#home" class="brand">
+      <img src="logo.png" alt="AK Apps Store" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'" />
+      <span class="fallback-logo">AK</span>
+      <b>AK <span>APPS STORE</span></b>
+    </a>
+    <nav class="links" id="links">
+      <a href="#home">Home</a>
+      <a href="#apps">Apps</a>
+      <a href="#features">Features</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <button class="burger" id="burger" aria-label="Menu"><i></i><i></i><i></i></button>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="hero-text reveal">
+        <span class="pill">⚡ Fast • Safe • Free</span>
+        <h1>Apni Favourite <span class="grad">Android Apps</span> Yahan Se Download Karein</h1>
+        <p>AK Apps Store mein milengi hamari banayi hui original APK apps. Ek click mein download, seedha apne phone mein.</p>
+        <div class="cta">
+          <a href="#apps" class="btn primary">Browse Apps ↓</a>
+          <a href="#features" class="btn ghost">Why AK Store?</a>
+        </div>
+        <div class="stats">
+          <div><b data-count="0" id="statApps">0</b><small>Apps</small></div>
+          <div><b data-count="100" data-suffix="%">0</b><small>Free</small></div>
+          <div><b data-count="24" data-suffix="/7">0</b><small>Available</small></div>
+        </div>
+      </div>
+      <div class="hero-logo reveal">
+        <div class="ring r1"></div><div class="ring r2"></div>
+        <img src="logo.png" alt="AK Apps Store logo" class="big-logo" onerror="this.style.display='none';document.getElementById('bigFallback').style.display='block'" />
+        <div id="bigFallback" class="big-fallback">AK</div>
+      </div>
+    </section>
+
+    <!-- AD SLOT 1 -->
+    <div class="ad-wrap"><div class="ad" data-slot="top">
+      <!-- Yahan AdSense ya koi bhi ad code paste karein -->
+      <small>Advertisement</small>
+    </div></div>
+
+    <section class="apps" id="apps">
+      <div class="sec-head reveal">
+        <h2>Latest <span class="grad">Apps</span></h2>
+        <p>Search karein ya category chunein</p>
+      </div>
+      <div class="tools reveal">
+        <input id="search" type="search" placeholder="🔍 App ka naam search karein..." />
+        <div class="chips" id="chips"></div>
+      </div>
+      <div class="grid" id="grid"></div>
+      <p class="empty" id="empty" hidden>Koi app nahi mila 😕</p>
+    </section>
+
+    <section class="features" id="features">
+      <div class="sec-head reveal"><h2>Kyun <span class="grad">AK Apps Store?</span></h2></div>
+      <div class="f-grid">
+        <div class="f-card reveal"><span>🚀</span><h3>Fast Download</h3><p>Light website, tez download, koi jhanjhat nahi.</p></div>
+        <div class="f-card reveal"><span>🛡️</span><h3>Original Apps</h3><p>Sabhi apps hamare khud ke banaye hue hain.</p></div>
+        <div class="f-card reveal"><span>🆓</span><h3>100% Free</h3><p>Koi hidden charge nahi, bas download aur use karein.</p></div>
+        <div class="f-card reveal"><span>🔄</span><h3>Regular Updates</h3><p>Naye apps aur updates lagataar aate rahenge.</p></div>
+      </div>
+    </section>
+
+    <!-- AD SLOT 2 -->
+    <div class="ad-wrap"><div class="ad" data-slot="mid"><small>Advertisement</small></div></div>
+
+    <section class="how reveal">
+      <h2>Install Kaise Karein?</h2>
+      <ol>
+        <li><b>1</b> App ke <em>Download</em> button par click karein</li>
+        <li><b>2</b> APK file download hone ke baad open karein</li>
+        <li><b>3</b> "Unknown sources" allow karein aur <em>Install</em> dabayein</li>
+      </ol>
+    </section>
+
+    <section class="contact reveal" id="contact">
+      <h2>Contact <span class="grad">Karein</span></h2>
+      <p>Koi problem ya suggestion? Hume message karein.</p>
+      <div class="cta center">
+        <a class="btn primary" id="mailBtn" href="mailto:youremail@example.com">✉️ Email</a>
+        <a class="btn ghost" id="tgBtn" href="https://t.me/yourusername" target="_blank" rel="noopener">Telegram</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© <span id="year"></span> AK Apps Store. All rights reserved.</p>
+    <p><a href="#" id="privacyLink">Privacy Policy</a> • <a href="#contact">Contact</a></p>
+  </footer>
+
+  <!-- Download modal (ad + countdown) -->
+  <div class="modal" id="modal" aria-hidden="true">
+    <div class="modal-box">
+      <button class="close" id="mClose" aria-label="Close">✕</button>
+      <img id="mIcon" alt="" />
+      <h3 id="mName"></h3>
+      <p id="mMeta"></p>
+      <div class="ad small" data-slot="modal"><small>Advertisement</small></div>
+      <div class="bar"><i id="bar"></i></div>
+      <a class="btn primary disabled" id="mBtn" href="#" download>Please wait <span id="sec">5</span>s…</a>
+      <p class="note">Download shuru na ho to button dobara dabayein.</p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
