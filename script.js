@@ -1,6 +1,6 @@
 /* ================= SETTINGS (yahan apni details badlein) ================= */
 const CONFIG = {
-  email: "youremail@example.com",
+  email: "s14875047@gmail.com",
   telegram: "https://t.me/yourusername",
   countdownSeconds: 5          // download se pehle kitne second ad dikhana hai
 };
