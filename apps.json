@@ -1,5 +1,15 @@
 [
   {
+    "name": "OG STREAM STUDIO",
+    "category": "Tools",
+    "description": "OG STREAM STUDIO ek halka Android streaming app hai, jo low-end phone par game screen, mic aur game sound ko seedha YouTube live par bhejta hai. Isme movable canvas layers, text/image/web overlay, volume aur mute controls, floating LIVE bubble, aur \"STREAMING SOON\" wala BRB mode hai.",
+    "version": "1.5",
+    "size": "1.4 MB",
+    "rating": "4.8",
+    "icon": "icons/og-stream-studio.png",
+    "apk": "apk/og-stream-studio-v1-5.apk"
+  },
+  {
     "name": "Sample App Two",
     "category": "Entertainment",
     "description": "Dusri example app. Icon aur APK ka path apne files ke hisaab se badlein.",
