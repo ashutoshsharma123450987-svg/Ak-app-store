@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex,nofollow" />
+<title>AK Apps Store – Admin</title>
+<style>
+:root{--bg:#0a0a0a;--card:#141414;--line:#2a2a2a;--txt:#f3f3f3;--mut:#9a9a9a;--grad:linear-gradient(135deg,#ffb300,#ff8a00 50%,#ff4d00)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--txt);padding:18px;line-height:1.5}
+.wrap{max-width:640px;margin:0 auto}
+h1{font-size:1.4rem;margin:6px 0 4px;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+h2{font-size:1.05rem;margin-bottom:12px}
+p.sub{color:var(--mut);font-size:.88rem;margin-bottom:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:18px}
+label{display:block;font-size:.82rem;color:var(--mut);margin:12px 0 5px}
+input,select,textarea{width:100%;padding:11px 13px;border-radius:10px;border:1px solid var(--line);background:#0e0e0e;color:#fff;font:inherit;outline:none}
+input:focus,select:focus,textarea:focus{border-color:#ff8a00}
+input[type=file]{padding:9px}
+textarea{min-height:76px;resize:vertical}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+button{margin-top:16px;width:100%;padding:13px;border:0;border-radius:12px;background:var(--grad);color:#111;font-weight:700;font-size:1rem;cursor:pointer}
+button:disabled{opacity:.5}
+button.sec{background:transparent;border:1px solid #ff8a00;color:#ffb300}
+button.del{width:auto;margin:0;padding:7px 12px;font-size:.8rem;background:#3a1212;color:#ff8a8a}
+.chk{display:flex;gap:8px;align-items:center;margin-top:12px;font-size:.85rem;color:var(--mut)}
+.chk input{width:auto}
+#log{white-space:pre-wrap;font-size:.85rem;margin-top:14px;color:#cfcfcf;min-height:20px}
+.ok{color:#6be08b}.err{color:#ff7b7b}
+.item{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--line)}
+.item:last-child{border:0}.item small{color:var(--mut);display:block}
+.hide{display:none}
+details{font-size:.85rem;color:var(--mut);margin-top:14px}
+details li{margin:6px 0 6px 18px}
+a{color:#ffb300}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>AK Apps Store – Admin</h1>
+  <p class="sub">Yahan se apni app seedha website par upload karein. Yeh page sirf aapke liye hai.</p>
+
+  <!-- LOGIN -->
+  <div class="card" id="loginCard">
+    <h2>🔐 Login (GitHub Token)</h2>
+    <label>GitHub Repository (owner/repo)</label>
+    <input id="repoIn" placeholder="ashutoshsharma123450987-svg/Ak-app-store" />
+    <label>GitHub Token</label>
+    <input id="tokIn" type="password" placeholder="github_pat_..." autocomplete="off" />
+    <div class="chk"><input type="checkbox" id="remember" /> <span>Is phone par yaad rakhein</span></div>
+    <button id="loginBtn">Login</button>
+    <details>
+      <summary>Token kaise banayein?</summary>
+      <ol>
+        <li>GitHub → Profile photo → <b>Settings</b> → <b>Developer settings</b></li>
+        <li><b>Personal access tokens → Fine-grained tokens → Generate new token</b></li>
+        <li>Repository access: <b>Only select repositories</b> → <b>Ak-app-store</b></li>
+        <li>Permissions → <b>Contents: Read and write</b></li>
+        <li>Generate karke token copy karein aur yahan paste karein</li>
+      </ol>
+      Token kisi ko na dein. Yeh sirf aapke browser mein rehta hai.
+    </details>
+  </div>
+
+  <!-- ADMIN -->
+  <div id="adminArea" class="hide">
+    <div class="card">
+      <h2>➕ Nayi App Upload Karein</h2>
+      <label>App ka naam *</label>
+      <input id="fName" placeholder="My Awesome App" />
+      <div class="row">
+        <div><label>Category *</label>
+          <input id="fCat" list="cats" placeholder="Tools" />
+          <datalist id="cats"><option>Tools</option><option>Games</option><option>Entertainment</option><option>Education</option><option>Social</option><option>Productivity</option></datalist>
+        </div>
+        <div><label>Version *</label><input id="fVer" placeholder="1.0" /></div>
+      </div>
+      <label>Description *</label>
+      <textarea id="fDesc" placeholder="App ke baare mein 1-2 line"></textarea>
+      <div class="row">
+        <div><label>Rating</label><input id="fRate" placeholder="4.5" /></div>
+        <div><label>Size (auto)</label><input id="fSize" placeholder="auto" /></div>
+      </div>
+      <label>App Icon (png/jpg) *</label>
+      <input id="fIcon" type="file" accept="image/*" />
+      <label>APK file *</label>
+      <input id="fApk" type="file" accept=".apk,application/vnd.android.package-archive" />
+      <p class="sub" style="margin-top:8px">Max ~50 MB. Isse badi APK ke liye GitHub Releases use karein.</p>
+      <button id="uploadBtn">⬆ Upload Karein</button>
+      <div id="log"></div>
+    </div>
+
+    <div class="card">
+      <h2>📱 Maujooda Apps</h2>
+      <div id="list"></div>
+      <button class="sec" id="reloadBtn">Refresh</button>
+    </div>
+    <button class="sec" id="logoutBtn">Logout</button>
+  </div>
+</div>
+
+<script>
+const API = "https://api.github.com";
+const $ = id => document.getElementById(id);
+let token = "", owner = "", repo = "", branch = "main";
+
+/* ---------- repo auto-detect ---------- */
+(function detect() {
+  let guess = "ashutoshsharma123450987-svg/Ak-app-store";
+  if (location.hostname.endsWith(".github.io")) {
+    const o = location.hostname.split(".")[0], r = location.pathname.split("/")[1];
+    if (o && r) guess = o + "/" + r;
+  }
+  $("repoIn").value = localStorage.getItem("ak_repo") || guess;
+  const t = localStorage.getItem("ak_token");
+  if (t) { $("tokIn").value = t; $("remember").checked = true; }
+})();
+
+/* ---------- helpers ---------- */
+const hdr = () => ({ Authorization: "Bearer " + token, Accept: "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28" });
+async function gh(path, opts = {}) {
+  const r = await fetch(API + path, { ...opts, headers: { ...hdr(), ...(opts.headers || {}) } });
+  if (!r.ok) {
+    let m = ""; try { m = (await r.json()).message; } catch (e) {}
+    throw new Error(r.status + (m ? " – " + m : ""));
+  }
+  return r.status === 204 ? null : r.json();
+}
+const enc = p => p.split("/").map(encodeURIComponent).join("/");
+const toB64Text = s => { const b = new TextEncoder().encode(s); let bin = ""; b.forEach(x => bin += String.fromCharCode(x)); return btoa(bin); };
+const fromB64Text = b => new TextDecoder().decode(Uint8Array.from(atob(b.replace(/\n/g, "")), c => c.charCodeAt(0)));
+async function fileB64(f) {
+  let buf;
+  try { buf = await f.arrayBuffer(); }
+  catch (e) { throw new Error("File padh nahi paya (" + (e.name || "error") + "). Icon aur APK dobara chunein, phir turant Upload dabayein. Chrome browser mein page kholein."); }
+  const bytes = new Uint8Array(buf); let bin = ""; const CH = 0x8000;
+  for (let i = 0; i < bytes.length; i += CH) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + CH));
+  return btoa(bin);
+}
+const slug = s => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "app";
+const esc = s => String(s ?? "").replace(/[&<>"']/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
+const log = (m, c = "") => { $("log").innerHTML = `<span class="${c}">${esc(m)}</span>`; };
+
+async function getMeta(path) {
+  try { return await gh(`/repos/${owner}/${repo}/contents/${enc(path)}?ref=${encodeURIComponent(branch)}`); }
+  catch (e) { if (String(e.message).startsWith("404")) return null; throw e; }
+}
+async function putFile(path, b64, message) {
+  const ex = await getMeta(path);
+  const body = { message, content: b64, branch };
+  if (ex && ex.sha) body.sha = ex.sha;
+  return gh(`/repos/${owner}/${repo}/contents/${enc(path)}`, { method: "PUT", body: JSON.stringify(body) });
+}
+async function readApps() {
+  const m = await getMeta("apps.json");
+  if (!m) return { list: [], sha: null };
+  let list = []; try { list = JSON.parse(fromB64Text(m.content)); } catch (e) { throw new Error("apps.json sahi format mein nahi hai"); }
+  return { list, sha: m.sha };
+}
+async function saveApps(list, message) {
+  const cur = await getMeta("apps.json");
+  const body = { message, content: toB64Text(JSON.stringify(list, null, 2) + "\n"), branch };
+  if (cur && cur.sha) body.sha = cur.sha;
+  return gh(`/repos/${owner}/${repo}/contents/apps.json`, { method: "PUT", body: JSON.stringify(body) });
+}
+
+/* ---------- login ---------- */
+$("loginBtn").onclick = async () => {
+  const rp = $("repoIn").value.trim().replace(/^https?:\/\/github\.com\//, "").replace(/\/$/, "");
+  token = $("tokIn").value.trim();
+  if (!/^[^/]+\/[^/]+$/.test(rp) || !token) return alert("Repo (owner/repo) aur token dono daalein");
+  [owner, repo] = rp.split("/");
+  $("loginBtn").disabled = true; $("loginBtn").textContent = "Check ho raha hai...";
+  try {
+    const info = await gh(`/repos/${owner}/${repo}`);
+    branch = info.default_branch || "main";
+    if (info.permissions && !info.permissions.push) throw new Error("Is token ko write permission nahi hai");
+    localStorage.setItem("ak_repo", rp);
+    if ($("remember").checked) localStorage.setItem("ak_token", token); else localStorage.removeItem("ak_token");
+    $("loginCard").classList.add("hide"); $("adminArea").classList.remove("hide");
+    loadList();
+  } catch (e) { alert("Login fail: " + e.message); }
+  $("loginBtn").disabled = false; $("loginBtn").textContent = "Login";
+};
+$("logoutBtn").onclick = () => { localStorage.removeItem("ak_token"); token = ""; $("tokIn").value = ""; $("adminArea").classList.add("hide"); $("loginCard").classList.remove("hide"); };
+
+/* ---------- size auto ---------- */
+$("fApk").onchange = () => {
+  const f = $("fApk").files[0]; if (!f) return;
+  $("fSize").value = (f.size / 1048576).toFixed(1) + " MB";
+};
+
+/* ---------- upload ---------- */
+$("uploadBtn").onclick = async () => {
+  const name = $("fName").value.trim(), cat = $("fCat").value.trim(), ver = $("fVer").value.trim(),
+        desc = $("fDesc").value.trim(), icon = $("fIcon").files[0], apk = $("fApk").files[0];
+  if (!name || !cat || !ver || !desc || !icon || !apk) return log("Saare * wale fields bharein, icon aur APK chunein.", "err");
+  if (apk.size > 50 * 1048576) return log("APK 50 MB se badi hai. GitHub Releases use karein.", "err");
+  const s = slug(name), iconExt = (icon.name.split(".").pop() || "png").toLowerCase().replace(/[^a-z0-9]/g, "") || "png";
+  const iconPath = `icons/${s}.${iconExt}`, apkPath = `apk/${s}-v${slug(ver)}.apk`;
+  const btn = $("uploadBtn"); btn.disabled = true;
+  try {
+    log("1/4 Icon upload ho raha hai...");
+    await putFile(iconPath, await fileB64(icon), `Add icon for ${name}`);
+    log("2/4 APK upload ho rahi hai (thoda time lag sakta hai)...");
+    await putFile(apkPath, await fileB64(apk), `Add APK for ${name} v${ver}`);
+    log("3/4 App list update ho rahi hai...");
+    const { list } = await readApps();
+    const entry = {
+      name, category: cat, description: desc, version: ver,
+      size: $("fSize").value.trim() || (apk.size / 1048576).toFixed(1) + " MB",
+      rating: $("fRate").value.trim() || "4.5", icon: iconPath, apk: apkPath
+    };
+    const i = list.findIndex(a => a.name.toLowerCase() === name.toLowerCase());
+    if (i >= 0) list[i] = entry; else list.unshift(entry);
+    await saveApps(list, `${i >= 0 ? "Update" : "Add"} app: ${name}`);
+    log("4/4 Ho gaya! ✅ 1–2 minute mein website par dikhne lagegi.", "ok");
+    ["fName", "fCat", "fVer", "fDesc", "fRate", "fSize", "fIcon", "fApk"].forEach(id => $(id).value = "");
+    loadList();
+  } catch (e) { log("Error: " + e.message, "err"); }
+  btn.disabled = false;
+};
+
+/* ---------- list + delete ---------- */
+async function loadList() {
+  const box = $("list"); box.textContent = "Load ho raha hai...";
+  try {
+    const { list } = await readApps();
+    if (!list.length) { box.innerHTML = '<p class="sub">Abhi koi app nahi hai.</p>'; return; }
+    box.innerHTML = "";
+    list.forEach(a => {
+      const d = document.createElement("div"); d.className = "item";
+      d.innerHTML = `<div><b>${esc(a.name)}</b><small>${esc(a.category)} • v${esc(a.version)} • ${esc(a.size)}</small></div><button class="del">Delete</button>`;
+      d.querySelector("button").onclick = () => delApp(a);
+      box.appendChild(d);
+    });
+  } catch (e) { box.innerHTML = `<span class="err">${esc(e.message)}</span>`; }
+}
+async function delApp(a) {
+  if (!confirm(`"${a.name}" ko delete karein? Yeh wapas nahi aayega.`)) return;
+  try {
+    const { list } = await readApps();
+    await saveApps(list.filter(x => x.name !== a.name), `Remove app: ${a.name}`);
+    for (const p of [a.icon, a.apk]) {
+      if (p && !/^https?:/i.test(p) && /^(icons|apk)\//.test(p)) {
+        const m = await getMeta(p);
+        if (m && m.sha) await gh(`/repos/${owner}/${repo}/contents/${enc(p)}`, { method: "DELETE", body: JSON.stringify({ message: `Delete ${p}`, sha: m.sha, branch }) });
+      }
+    }
+    log(`"${a.name}" delete ho gayi.`, "ok");
+  } catch (e) { log("Delete error: " + e.message, "err"); }
+  loadList();
+}
+$("reloadBtn").onclick = loadList;
+</script>
+</body>
+</html>
