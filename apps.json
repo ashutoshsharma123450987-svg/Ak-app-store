@@ -1,15 +1,5 @@
 [
   {
-    "name": "Sample App One",
-    "category": "Tools",
-    "description": "Yeh ek example app hai. apps.json mein apni asli app ki details daal dein.",
-    "version": "1.0",
-    "size": "12 MB",
-    "rating": "4.5",
-    "icon": "icons/sample1.png",
-    "apk": "apk/sample1.apk"
-  },
-  {
     "name": "Sample App Two",
     "category": "Entertainment",
     "description": "Dusri example app. Icon aur APK ka path apne files ke hisaab se badlein.",
