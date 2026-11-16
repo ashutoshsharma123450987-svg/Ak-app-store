@@ -8,15 +8,5 @@
     "rating": "4.8",
     "icon": "icons/og-stream-studio.png",
     "apk": "apk/og-stream-studio-v1-5.apk"
-  },
-  {
-    "name": "Sample App Two",
-    "category": "Entertainment",
-    "description": "Dusri example app. Icon aur APK ka path apne files ke hisaab se badlein.",
-    "version": "2.1",
-    "size": "25 MB",
-    "rating": "4.8",
-    "icon": "icons/sample2.png",
-    "apk": "apk/sample2.apk"
   }
 ]
